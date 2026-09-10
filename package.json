@@ -1,0 +1,67 @@
+{
+  "name": "@pmwdigital/tr",
+  "version": "0.1.0",
+  "description": "Türkiye'ye özgü para, kimlik, IBAN, telefon ve metin yardımcıları",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./para": {
+      "types": "./dist/para.d.ts",
+      "default": "./dist/para.js"
+    },
+    "./metin": {
+      "types": "./dist/metin.d.ts",
+      "default": "./dist/metin.js"
+    },
+    "./kimlik": {
+      "types": "./dist/kimlik.d.ts",
+      "default": "./dist/kimlik.js"
+    },
+    "./iban": {
+      "types": "./dist/iban.d.ts",
+      "default": "./dist/iban.js"
+    },
+    "./telefon": {
+      "types": "./dist/telefon.d.ts",
+      "default": "./dist/telefon.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pmwdigital/pmw-tr.git"
+  },
+  "keywords": [
+    "turkey",
+    "turkce",
+    "tckn",
+    "vkn",
+    "iban",
+    "kdv",
+    "kurus",
+    "e164",
+    "collation"
+  ]
+}
