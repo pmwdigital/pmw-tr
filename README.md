@@ -1,7 +1,8 @@
 # @pmwdigital/tr
 
 Türkiye'ye özgü işlerde her projede yeniden yazılan yardımcılar. Para, kimlik
-numarası, IBAN, telefon ve Türkçe metin.
+numarası, IBAN, telefon, Türkçe metin, Excel'in doğru açtığı CSV ve tarihe göre
+geçerli KDV oranları.
 
 Bağımlılığı yoktur. TypeScript ile yazılmıştır, ESM olarak dağıtılır.
 
@@ -114,6 +115,55 @@ telefon.normalize("(0532) 123-45-67"); // "+905321234567"
 telefon.isValidMobile("0212 123 45 67"); // false
 telefon.format("+905321234567");       // "0532 123 45 67"
 ```
+
+## CSV
+
+Türkçe Excel, virgülü ondalık ayracı sayar ve BOM olmadan UTF-8 dosyayı yanlış
+kod sayfasıyla açar. Bu yüzden varsayılanlar noktalı virgül ayraç, başta BOM ve
+CRLF satır sonudur.
+
+```ts
+import { csv } from "@pmwdigital/tr";
+
+csv.build(["Ad", "Tutar"], [["Ayşe Yılmaz", csv.formatNumber(1234.5)]]);
+// BOM + "Ad;Tutar\r\nAyşe Yılmaz;1234,50"
+
+csv.escapeField("=1+1");        // "'=1+1", tablo formül diye çalıştırmaz
+csv.escapeField("Yılmaz; Ayşe"); // "\"Yılmaz; Ayşe\""
+csv.build(["a"], [["x"]], { bom: false, delimiter: "," }); // "a\r\nx"
+```
+
+`=`, `+`, `-` ve `@` ile başlayan değerlerin başına tek tırnak eklenir; adı
+`=cmd` olan bir kayıt tabloda komut olarak çalışmaz, metin olarak görünür.
+
+## KDV oranları
+
+Oranlar tarihe bağlıdır: 10 Temmuz 2023'te genel oran %18'den %20'ye, indirimli
+oran %8'den %10'a çıktı (7346 sayılı Cumhurbaşkanı Kararı, 7 Temmuz 2023 tarihli
+ve 32241 sayılı Resmî Gazete). Geçmiş bir faturayı kendi gününün oranıyla
+göstermek için oranlar yürürlük aralığıyla tutulur.
+
+```ts
+import { kdv } from "@pmwdigital/tr";
+
+kdv.ratesOn("2026-11-04"); // [1, 10, 20]
+kdv.ratesOn("2023-07-09"); // [], paket 10 Temmuz 2023 öncesini içermez
+
+const benimDonemlerim = [
+    { rate: 1, validFrom: "2020-01-01", validUntil: null },
+    { rate: 8, validFrom: "2020-01-01", validUntil: "2023-07-09" },
+    { rate: 18, validFrom: "2020-01-01", validUntil: "2023-07-09" },
+    { rate: 10, validFrom: "2023-07-10", validUntil: null },
+    { rate: 20, validFrom: "2023-07-10", validUntil: null },
+];
+kdv.ratesOn("2023-07-09", benimDonemlerim); // [1, 8, 18]
+
+kdv.withStoredRate([1, 10, 20], 18); // [1, 10, 18, 20], eski kaydı düzenlerken
+```
+
+Başlangıç ve bitiş günleri dahildir. Gün `YYYY-AA-GG` biçiminde değilse
+`RangeError` fırlatılır. Hangi ürünün hangi orana girdiği bu paketin işi değildir;
+o karar mevzuata ve mali müşavire aittir.
 
 ## Geliştirme
 

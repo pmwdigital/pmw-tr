@@ -31,6 +31,14 @@
     "./telefon": {
       "types": "./dist/telefon.d.ts",
       "default": "./dist/telefon.js"
+    },
+    "./csv": {
+      "types": "./dist/csv.d.ts",
+      "default": "./dist/csv.js"
+    },
+    "./kdv": {
+      "types": "./dist/kdv.d.ts",
+      "default": "./dist/kdv.js"
     }
   },
   "files": [
