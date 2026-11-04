@@ -22,6 +22,10 @@ hatalarla yeniden yazılıyor:
 npm install github:pmwdigital/pmw-tr
 ```
 
+npm, GitHub'dan kurarken paketi `prepare` betiğiyle derler. Ayarlarınızda
+`ignore-scripts` açıksa bu adım atlanır ve `dist` eksik kalır; o makinede
+kurulumu `npm install --ignore-scripts=false github:pmwdigital/pmw-tr` ile yapın.
+
 ## Para
 
 Bütün tutarlar **tam sayı kuruş** olarak tutulur. Kayan nokta hiç kullanılmaz.
